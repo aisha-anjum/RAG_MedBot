@@ -21,7 +21,7 @@ def load_vectorstore():
 vectorstore = load_vectorstore()
 retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
 
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.3)
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
 
 
 
