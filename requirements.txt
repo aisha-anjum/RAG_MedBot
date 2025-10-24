@@ -7,3 +7,4 @@ langchain-openai==0.1.7
 faiss-cpu==1.7.4
 sentence-transformers==2.7.0
 python-dotenv==1.0.1
+rich==13.7.1
