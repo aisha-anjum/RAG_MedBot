@@ -1,14 +1,14 @@
 import os
-from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.vectorstores import Chroma
 
-# Paths
-pdf_path = r"D:\Python\RAG_MedBot\standard-treatment-guidelines.pdf"
-index_path = "faiss_index"
+# ✅ Paths
+pdf_path = r"D:\Python\RAG_MedBot\Primary-Healthcare-Standard-Treatment-Guidelines-and-Essential-Medicines-List-8th-Edition-2024.pdf"
+db_path = "chroma_db"
 
-print("🔹 Loading new PDF...")
+print("🔹 Loading PDF...")
 loader = PyPDFLoader(pdf_path)
 docs = loader.load()
 
@@ -19,18 +19,8 @@ texts = splitter.split_documents(docs)
 print("🔹 Creating embeddings...")
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-# ✅ Check if FAISS index already exists
-if os.path.exists(index_path):
-    print("🔹 Loading existing FAISS index...")
-    vectorstore = FAISS.load_local(index_path, embeddings, allow_dangerous_deserialization=True)
+print("🔹 Creating / Updating Chroma DB...")
+vectorstore = Chroma.from_documents(texts, embeddings, persist_directory=db_path)
+vectorstore.persist()
 
-    print("🔹 Adding new data to existing index...")
-    vectorstore.add_documents(texts)
-else:
-    print("🔹 No index found — creating a new one...")
-    vectorstore = FAISS.from_documents(texts, embeddings)
-
-print("🔹 Saving updated FAISS index...")
-vectorstore.save_local(index_path)
-
-print("✅ Update complete! Your knowledge base now contains old + new PDFs ✅")
+print("✅ Chroma DB created & saved successfully!")
