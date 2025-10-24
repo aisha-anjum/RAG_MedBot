@@ -8,8 +8,9 @@ from langchain.chains import RetrievalQA  # ✅ Correct import for v1.0+
 from dotenv import load_dotenv
 import os
 
-# Load environment variables from .env file
 load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
+
 
 # Optional: Check if key loaded
 print("API Key loaded:", bool(os.getenv("OPENAI_API_KEY")))
@@ -19,6 +20,7 @@ from langchain.chat_models import ChatOpenAI
 llm = ChatOpenAI(
     model_name="gpt-3.5-turbo",
     temperature=0.3,
+    openai_api_key=api_key
 )
 
 
